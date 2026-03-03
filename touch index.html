@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Daily Sales Reconciliation</title>
+    <style>
+        body {
+            font-family: Arial;
+            background-color: #f2f4f8;
+            text-align: center;
+            padding: 30px;
+        }
+        .box {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            width: 380px;
+            margin: auto;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+        input {
+            width: 95%;
+            padding: 8px;
+            margin: 6px 0;
+        }
+        button {
+            padding: 10px 20px;
+            margin-top: 10px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 6px;
+        }
+        h2 {
+            margin-bottom: 15px;
+        }
+        .result {
+            margin-top: 15px;
+            font-weight: bold;
+            text-align: left;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="box">
+    <h2>Daily Sales Reconciliation</h2>
+
+    <input type="number" id="totalCash" placeholder="Total Cash Counted (Including ₹500)">
+    <input type="number" id="expenses" placeholder="Total Expenses">
+    <input type="number" id="gpay" placeholder="GPay / Online Sales">
+    <input type="number" id="patientCredit" placeholder="Patient Credit">
+    <input type="number" id="staffCredit" placeholder="Staff Credit">
+    <input type="number" id="systemTotal" placeholder="System Total Sales">
+
+    <button onclick="calculate()">Calculate</button>
+
+    <div class="result" id="output"></div>
+</div>
+
+<script>
+function calculate() {
+
+    const pettyCash = 500;
+
+    let totalCash = parseFloat(document.getElementById("totalCash").value) || 0;
+    let expenses = parseFloat(document.getElementById("expenses").value) || 0;
+    let gpay = parseFloat(document.getElementById("gpay").value) || 0;
+    let patientCredit = parseFloat(document.getElementById("patientCredit").value) || 0;
+    let staffCredit = parseFloat(document.getElementById("staffCredit").value) || 0;
+    let systemTotal = parseFloat(document.getElementById("systemTotal").value) || 0;
+
+    let cashBalance = totalCash - pettyCash;
+    let cashSales = cashBalance + expenses;
+    let manualTotal = cashSales + gpay + patientCredit + staffCredit;
+    let difference = manualTotal - systemTotal;
+
+    let status = "";
+
+    if (difference > 0) {
+        status = "Adjustment Bill Needed: ₹" + difference.toFixed(2);
+    } 
+    else if (difference < 0) {
+        status = "System Has Extra: ₹" + Math.abs(difference).toFixed(2);
+    } 
+    else {
+        status = "Perfect Tally ✅";
+    }
+
+    document.getElementById("output").innerHTML =
+        "Cash Balance (After ₹500 petty cash): ₹" + cashBalance.toFixed(2) + "<br>" +
+        "Rebuilt Cash Sales: ₹" + cashSales.toFixed(2) + "<br>" +
+        "Manual Total Sales: ₹" + manualTotal.toFixed(2) + "<br>" +
+        "System Total Sales: ₹" + systemTotal.toFixed(2) + "<br><br>" +
+        status;
+}
+</script>
+
+</body>
+</html>
